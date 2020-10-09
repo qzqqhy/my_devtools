@@ -1,6 +1,10 @@
 package com.liuxiu.tools.utils;
 
 import com.liuxiu.tools.utils.compile.JdkCompiler;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * @version V1.0
@@ -12,9 +16,13 @@ import com.liuxiu.tools.utils.compile.JdkCompiler;
  * @ModifyTime： 2020-10-08
  * @Modify marker：
  */
-public class BeanFactory {
+@Component
+public class MyBeanFactory {
 
-    private static BeanFactory utils;
+    @Autowired(required = false)
+    private BeanFactory beanFactory;
+
+
 
     /**
      * @param
@@ -37,6 +45,7 @@ public class BeanFactory {
 //        } catch (IllegalAccessException e) {
 //            ExceptionUtils.getFullStackTrace(e);
 //        }
+
         return clazz;
     }
 

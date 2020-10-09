@@ -1,6 +1,6 @@
 package com.liuxiu.tools;
 
-import com.liuxiu.tools.utils.BeanFactory;
+import com.liuxiu.tools.utils.MyBeanFactory;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,7 +14,7 @@ class ToolsApplicationTests {
 
     @Test
     public void test() {
-        String javasource = "package com.liuxiu.tools;public class DynamicCompile implements ITest {@Override public String getPi() {return String.valueOf(Math.PI);} }";
+        String javasource = "package com.liuxiu.tools;public class DynamicCompile1 { public String getPi() {return String.valueOf(Math.PI);} }";
 //        Thread.currentThread()
 //                .getContextClassLoader();
 
@@ -30,7 +30,7 @@ class ToolsApplicationTests {
 
         System.out.println("javasource:" + javasource);
 
-        Class<?> make = BeanFactory.make(javasource);
+        Class<?> make = MyBeanFactory.make(javasource);
 
         try {
             System.out.println(((ITest) make.newInstance()).getPi());
