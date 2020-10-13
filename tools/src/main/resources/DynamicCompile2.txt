@@ -1,0 +1,24 @@
+package com.liuxiu.tools;
+
+
+
+public class DynamicCompile2 {
+
+
+
+	@Override
+	public String getPi() {
+		return "sss ß";
+	}
+
+	@Override
+	public String getBeanName() {
+		return "动态编译2";
+	}
+
+	@Override
+	public String getBeanId() {
+		return "dynamicCompile2";
+	}
+
+}

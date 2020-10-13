@@ -1,15 +1,11 @@
-package com.liuxiu.tools;
+package com.liuxiu.tools.base;
 
-import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 
-@Component("iTest")
 public abstract class ITest {
 
-    private Map<String, ITest> cacheMap = new HashMap<>();
+    protected static Map<String, Class> cacheMap = new HashMap<>();
 
     /**
      * @param
@@ -25,13 +21,12 @@ public abstract class ITest {
 
     public abstract String getBeanId();
 
-
-    @PostConstruct
-    protected void afterRun() {
-        cacheMap.put(getBeanId(), this);
+    public static Class getCacheMap(String key) {
+        return cacheMap.get(key);
     }
 
-    public ITest init(String beanId){
-        return cacheMap.get(beanId);
+    public static Map<String, Class> getMap(){
+        return cacheMap;
     }
+
 }

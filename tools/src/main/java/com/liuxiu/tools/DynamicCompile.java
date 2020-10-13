@@ -1,10 +1,14 @@
 package com.liuxiu.tools;
 
-import org.springframework.stereotype.Service;
 
-@Service("dynamicCompile")
+import com.liuxiu.tools.base.ITest;
+
 public class DynamicCompile extends ITest {
-	
+
+	static {
+		cacheMap.put("dynamicCompile", DynamicCompile.class);
+	}
+
 	@Override
 	public String getPi() {
 		return String.valueOf(Math.PI);
@@ -19,4 +23,5 @@ public class DynamicCompile extends ITest {
 	public String getBeanId() {
 		return "dynamicCompile";
 	}
+
 }
