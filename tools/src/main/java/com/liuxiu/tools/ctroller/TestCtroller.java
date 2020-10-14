@@ -1,6 +1,5 @@
 package com.liuxiu.tools.ctroller;
 
-import com.liuxiu.tools.DynamicCompile;
 import com.liuxiu.tools.base.ITest;
 import com.liuxiu.tools.utils.MyBeanFactory;
 import org.apache.commons.lang.StringUtils;
@@ -23,7 +22,7 @@ public class TestCtroller {
     MyBeanFactory myBeanFactory;
 
     @RequestMapping(value = "compile")
-    public String test1() {
+    public String test1() throws InstantiationException, IllegalAccessException {
 
         String javasource = null;
 
@@ -40,7 +39,7 @@ public class TestCtroller {
 
         System.out.println("javasource:" + javasource);
 
-        MyBeanFactory.make(javasource);
+        myBeanFactory.make(javasource);
 
         return "oktest";
     }
@@ -64,8 +63,7 @@ public class TestCtroller {
 
         String res = "";
 
-        DynamicCompile dynamicCompile = new DynamicCompile();
-        res = dynamicCompile.getPi();
+
 
         return "ok" + name + "|" + res;
     }

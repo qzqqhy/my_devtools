@@ -2,12 +2,12 @@ package com.liuxiu.tools;
 
 import com.liuxiu.tools.base.ITest;
 import com.liuxiu.tools.utils.MyBeanFactory;
-import com.liuxiu.tools.utils.compile.JavaSource;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
@@ -21,8 +21,10 @@ class ToolsApplicationTests {
     void contextLoads() {
     }
 
+
     @Autowired(required = false)
-    DynamicCompile1 dynamicCompile1;
+    MyBeanFactory myBeanFactory;
+
 
     @Test
     public void test() throws IllegalAccessException, InstantiationException {
@@ -38,14 +40,10 @@ class ToolsApplicationTests {
 
         }
 
-        System.out.println(dynamicCompile1.getBeanName());
-//        JavaSource javaSource = new JavaSource();
-
         System.out.println("javasource:" + javasource);
 
-        Class<?> make = MyBeanFactory.make(javasource);
 
-        Object o = make.newInstance();
+        Object o = myBeanFactory.make(javasource);
         ITest tt = ((ITest)o);
         System.out.println(tt.getPi());
 

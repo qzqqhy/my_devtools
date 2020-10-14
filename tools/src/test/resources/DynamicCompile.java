@@ -14,6 +14,7 @@ public class DynamicCompile3 extends ITest {
     @Autowired(required = false)
     DynamicCompile1 dynamicCompile1;
 
+    //
     @PostConstruct
     public void init() {
         ITest.cacheMap.put("dynamicCompile3", DynamicCompile3.class);

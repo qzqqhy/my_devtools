@@ -4,16 +4,8 @@ package com.liuxiu.tools;
 import com.liuxiu.tools.base.ITest;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-
 @Component
 public class DynamicCompile1 extends ITest {
-
-	@PostConstruct
-	public void init(){
-		cacheMap.put("dynamicCompile1", DynamicCompile1.class);
-		System.out.println(1111);
-	}
 
 	@Override
 	public String getPi() {

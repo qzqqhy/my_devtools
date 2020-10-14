@@ -1,10 +1,14 @@
 package com.liuxiu.tools.utils;
 
 import com.liuxiu.tools.utils.compile.JdkCompiler;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.stereotype.Component;
+
+import java.util.Locale;
 
 /**
  * @version V1.0
@@ -19,9 +23,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class MyBeanFactory {
 
-    @Autowired(required = false)
-    private BeanFactory beanFactory;
+    @Autowired
+    private AutowireCapableBeanFactory beanFactory;
 
+    @Autowired
+    private DefaultListableBeanFactory defaultListableBeanFactory;
 
 
     /**
@@ -32,21 +38,20 @@ public class MyBeanFactory {
      * @author liuxiu
      * @date 2020-10-08 22:51
      */
-    public static Class<?> make(String javasource) {
+    public Object make(String javasource) throws IllegalAccessException, InstantiationException {
 
         JdkCompiler compiler = new JdkCompiler();
 
         Class<?> clazz = compiler.compile(javasource);
 
-//        try {
-//            System.out.println(((ITest) clazz.newInstance()).getPi());
-//        } catch (InstantiationException e) {
-//            ExceptionUtils.getFullStackTrace(e);
-//        } catch (IllegalAccessException e) {
-//            ExceptionUtils.getFullStackTrace(e);
-//        }
+        //将new出的对象放入Spring容器中
+        Object instance = clazz.newInstance();
+        defaultListableBeanFactory.registerSingleton(StringUtils.uncapitalize(clazz.getSimpleName()), instance);
 
-        return clazz;
+        //自动注入依赖
+        beanFactory.autowireBean(instance);
+
+        return instance;
     }
 
 
