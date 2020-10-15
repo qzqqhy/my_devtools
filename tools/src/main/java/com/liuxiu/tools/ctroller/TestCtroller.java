@@ -15,8 +15,6 @@ import java.util.List;
 @RestController("/testc")
 public class TestCtroller {
 
-    @Autowired(required = false)
-    ITest iTest;
 
     @Autowired(required = false)
     MyBeanFactory myBeanFactory;
@@ -31,7 +29,7 @@ public class TestCtroller {
         try {
             List<String> lines = IOUtils.readLines(Thread.currentThread()
                     .getContextClassLoader()
-                    .getResourceAsStream("DynamicCompile2.txt"));
+                    .getResourceAsStream("DynamicCompile2.java"));
             javasource = StringUtils.join(lines, "\n");
         } catch (IOException e) {
 

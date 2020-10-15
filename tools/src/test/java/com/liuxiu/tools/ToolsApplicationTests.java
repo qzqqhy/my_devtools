@@ -6,8 +6,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
@@ -48,8 +46,8 @@ class ToolsApplicationTests {
         System.out.println(tt.getPi());
 
         Map<String, Class> map = ITest.getMap();
-        ITest ss = ((ITest)ITest.getCacheMap("dynamicCompile3").newInstance());;
-        System.out.println(ss.getPi() + ss.getBeanId() + ss.getBeanName());
+//        ITest ss = ((ITest)ITest.getCacheMap("dynamicCompile3").newInstance());;
+//        System.out.println(ss.getPi() + ss.getBeanId() + ss.getBeanName());
 
     }
 
