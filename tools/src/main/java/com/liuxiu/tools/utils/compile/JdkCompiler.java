@@ -2,6 +2,7 @@ package com.liuxiu.tools.utils.compile;
 
 
 import com.liuxiu.tools.exception.YuGongException;
+import sun.misc.Launcher;
 
 import javax.tools.*;
 import javax.tools.JavaCompiler.CompilationTask;
@@ -21,7 +22,7 @@ public class JdkCompiler implements JavaSourceCompiler {
 
     private List<String> options = new ArrayList<String>();
 
-    public JdkCompiler(){
+    public JdkCompiler() {
     }
 
     public Class compile(String sourceString) {
@@ -30,8 +31,10 @@ public class JdkCompiler implements JavaSourceCompiler {
 
     private Class compile(JavaSource javaSource) {
         try {
-            JdkCompileTask compileTask = new JdkCompileTask(new JdkCompilerClassLoader(this.getClass().getClassLoader()),
-                options);
+            ClassLoader classLoader = Launcher.getLauncher().getClassLoader();
+
+            JdkCompileTask compileTask = new JdkCompileTask(new JdkCompilerClassLoader(classLoader),
+                    options);
             return compileTask.compile(javaSource.getPackageName(), javaSource.getClassName(), javaSource.getSource());
         } catch (JdkCompileException ex) {
             DiagnosticCollector<JavaFileObject> diagnostics = ex.getDiagnostics();
@@ -52,12 +55,12 @@ public class JdkCompiler implements JavaSourceCompiler {
 
     public static class JdkCompileTask<T> {
 
-        public static final String       EXTENSION = ".java";
-        public static final JavaCompiler compiler  = ToolProvider.getSystemJavaCompiler();
-        private List<String>             options;
-        private JdkCompilerClassLoader   classLoader;
+        public static final String EXTENSION = ".java";
+        public static final JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+        private List<String> options;
+        private JdkCompilerClassLoader classLoader;
 
-        public JdkCompileTask(JdkCompilerClassLoader classLoader, List<String> options){
+        public JdkCompileTask(JdkCompilerClassLoader classLoader, List<String> options) {
             if (compiler == null) {
                 throw new YuGongException("Can't find java compiler , pls check tools.jar");
             }
@@ -66,8 +69,8 @@ public class JdkCompiler implements JavaSourceCompiler {
         }
 
         public synchronized Class compile(String packageName, String className, final CharSequence javaSource)
-                                                                                                              throws JdkCompileException,
-                                                                                                              ClassCastException {
+                throws JdkCompileException,
+                ClassCastException {
             DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
             JavaFileManagerImpl javaFileManager = buildFileManager(classLoader, classLoader.getParent(), diagnostics);
 
@@ -75,11 +78,11 @@ public class JdkCompiler implements JavaSourceCompiler {
             javaFileManager.putFileForInput(StandardLocation.SOURCE_PATH, packageName, className + EXTENSION, source);
 
             CompilationTask task = compiler.getTask(null,
-                javaFileManager,
-                diagnostics,
-                options,
-                null,
-                Arrays.asList(source));
+                    javaFileManager,
+                    diagnostics,
+                    options,
+                    null,
+                    Arrays.asList(source));
             final Boolean result = task.call();
             if (result == null || !result.booleanValue()) {
                 throw new JdkCompileException("Compilation failed.", diagnostics);
@@ -96,7 +99,7 @@ public class JdkCompiler implements JavaSourceCompiler {
                                                      DiagnosticCollector<JavaFileObject> diagnostics) {
             StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostics, null, null);
             if (loader instanceof URLClassLoader
-                && (!"sun.misc.Launcher$AppClassLoader".equalsIgnoreCase(loader.getClass().getName()))) {
+                    && (!"sun.misc.Launcher$AppClassLoader".equalsIgnoreCase(loader.getClass().getName()))) {
                 try {
                     URLClassLoader urlClassLoader = (URLClassLoader) loader;
                     List<File> paths = new ArrayList<File>();
@@ -118,10 +121,10 @@ public class JdkCompiler implements JavaSourceCompiler {
 
     public static class JavaFileManagerImpl extends ForwardingJavaFileManager<JavaFileManager> {
 
-        private final JdkCompilerClassLoader   classLoader;
+        private final JdkCompilerClassLoader classLoader;
         private final Map<URI, JavaFileObject> fileDatas = new HashMap<URI, JavaFileObject>();
 
-        public JavaFileManagerImpl(JavaFileManager fileManager, JdkCompilerClassLoader classLoader){
+        public JavaFileManagerImpl(JavaFileManager fileManager, JdkCompilerClassLoader classLoader) {
             super(fileManager);
             this.classLoader = classLoader;
         }
@@ -133,7 +136,7 @@ public class JdkCompiler implements JavaSourceCompiler {
 
         @Override
         public FileObject getFileForInput(Location location, String packageName, String relativeName)
-                                                                                                     throws IOException {
+                throws IOException {
             FileObject o = fileDatas.get(clasURI(location, packageName, relativeName));
             if (o == null) {
                 return super.getFileForInput(location, packageName, relativeName);
@@ -167,7 +170,7 @@ public class JdkCompiler implements JavaSourceCompiler {
 
         @Override
         public Iterable<JavaFileObject> list(Location location, String packageName, Set<Kind> kinds, boolean recurse)
-                                                                                                                     throws IOException {
+                throws IOException {
             Iterable<JavaFileObject> files = super.list(location, packageName, kinds, recurse);
             List<JavaFileObject> result = new ArrayList<JavaFileObject>();
             for (JavaFileObject file : files) {
@@ -202,19 +205,19 @@ public class JdkCompiler implements JavaSourceCompiler {
     public static class JavaFileObjectImpl extends SimpleJavaFileObject {
 
         private ByteArrayOutputStream byteCode = new ByteArrayOutputStream();
-        private CharSequence          source;
+        private CharSequence source;
 
-        public JavaFileObjectImpl(final String baseName, final CharSequence source){
+        public JavaFileObjectImpl(final String baseName, final CharSequence source) {
             super(toURI(baseName + JdkCompileTask.EXTENSION), Kind.SOURCE);
             this.source = source;
         }
 
-        public JavaFileObjectImpl(final String name, final Kind kind){
+        public JavaFileObjectImpl(final String name, final Kind kind) {
             super(toURI(name), kind);
             source = null;
         }
 
-        public JavaFileObjectImpl(URI uri, Kind kind){
+        public JavaFileObjectImpl(URI uri, Kind kind) {
             super(uri, kind);
             source = null;
         }
@@ -247,7 +250,7 @@ public class JdkCompiler implements JavaSourceCompiler {
 
         private final Map<String, JavaFileObject> classes = new HashMap<String, JavaFileObject>();
 
-        public JdkCompilerClassLoader(ClassLoader parentClassLoader){
+        public JdkCompilerClassLoader(ClassLoader parentClassLoader) {
             super(parentClassLoader);
         }
 
@@ -282,7 +285,7 @@ public class JdkCompiler implements JavaSourceCompiler {
         }
 
         protected synchronized Class<?> loadClass(final String name, final boolean resolve)
-                                                                                           throws ClassNotFoundException {
+                throws ClassNotFoundException {
             try {
                 Class c = findClass(name);
                 if (c != null) {
